@@ -11,7 +11,7 @@ try
 {
     $sqlArray['Select'] = $Sql->select('data')->from('MY_TEST')->whereOrOn('key', 'User01')->exec();
     $sqlArray['Select Distinct'] = $Sql->select('data', 'distinct')->from('MY_TEST')->whereOrOn('key', 'User01')->exec();
-    $sqlArray['Select Join'] = $Sql->select('data')->from('TableA')->join('TableB')->whereOrOn('key', 'User01', 'on')->exec();
+    $sqlArray['Select Join'] = $Sql->select('data')->from('TableA')->join('TableB')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
     $sqlArray['Select Left Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'leftJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
     $sqlArray['Select Right Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'rightJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
     $sqlArray['Select Cross Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'crossJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();

@@ -11,12 +11,12 @@ Class Sql
 		{
 			if($key == 'distinct')
 			{ 
-				$this->data['selectVal'] = "Select distinct `$what` ";
+				$this->data['selectVal'] = "Select distinct $what ";
 				return $this;
 			}
 			else
 			{
-				$this->data['selectVal'] = "Select `$what` ";
+				$this->data['selectVal'] = "Select $what ";
 				return $this;
 			}
 		}
@@ -30,7 +30,7 @@ Class Sql
 	{
 		if(!empty($table))
 		{
-			$this->data['fromVal'] = "from `$table` ";
+			$this->data['fromVal'] = "from $table ";
 			return $this;
 		}
 		else
@@ -45,19 +45,19 @@ Class Sql
 		{
 			switch ($key)
 			{
-				case "join" : $this->data['joinVal'] = "INNER JOIN `$table` ";
+				case "join" : $this->data['joinVal'] = "INNER JOIN $table ";
 				return $this;
 				break;
-				case "leftJoin" : $this->data['joinVal'] = "LEFT OUTER JOIN `$table` ";
+				case "leftJoin" : $this->data['joinVal'] = "LEFT OUTER JOIN $table ";
 				return $this;
 				break;
-				case "rightJoin" : $this->data['joinVal'] = "RIGHT OUTER JOIN `$table` ";
+				case "rightJoin" : $this->data['joinVal'] = "RIGHT OUTER JOIN $table ";
 				return $this;
 				break;
-				case "crossJoin" : $this->data['joinVal'] = "CROSS JOIN `$table`";
+				case "crossJoin" : $this->data['joinVal'] = "CROSS JOIN $table";
 				return $this;
 				break;
-				case "naturalJoin" : $this->data['joinVal'] = "NATURAL JOIN `$table`";
+				case "naturalJoin" : $this->data['joinVal'] = "NATURAL JOIN $table";
 				return $this;
 				break;
 				default: throw new Exception("Invalid join key");
@@ -84,10 +84,10 @@ Class Sql
 
 			switch ($key) 
 			{
-				case "where" : $this->data['whereOrOnVal'] = "where `$param1` $operator '$param2' ";
+				case "where" : $this->data['whereOrOnVal'] = "where $param1 $operator '$param2' ";
 				return $this;
 				break;
-				case "on" : $this->data['whereOrOnVal'] = "ON `$param1` $operator `$param2` ";
+				case "on" : $this->data['whereOrOnVal'] = "ON $param1 $operator $param2 ";
 				return $this;
 				break;
 				default: throw new Exception("Invalid where key");
@@ -103,7 +103,7 @@ Class Sql
 	{
 		if(!empty($param))
 		{
-			$this->data['groupVal'] = "GROUP BY `$param` ";
+			$this->data['groupVal'] = "GROUP BY $param ";
 			return $this;
 		}
 		else
@@ -129,7 +129,7 @@ Class Sql
 	{
 		if(!empty($param) && !empty($key) && ($key == "asc" or $key == "desc"))
 		{
-			$this->data['orderVal'] = "ORDER BY `$param` $key ";
+			$this->data['orderVal'] = "ORDER BY $param $key ";
 			return $this;
 		}
 		else
@@ -157,7 +157,7 @@ Class Sql
 
 		if(!empty($table) && !empty($col1) && !empty($col2))
 		{
-			$this->data['insertVal'] = "INSERT INTO $table (`$col1`, `$col2`) ";
+			$this->data['insertVal'] = "INSERT INTO $table ($col1, $col2) ";
 			return $this;
 		}
 		else
@@ -214,7 +214,7 @@ Class Sql
 	{		
 		if(!empty($col) && !empty($val))
 		{
-			$this->data['setVal'] = "SET `$col` = '$val' ";
+			$this->data['setVal'] = "SET $col = '$val' ";
 			return $this;
 		}
 		else
