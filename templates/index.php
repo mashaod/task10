@@ -20,62 +20,14 @@
 
                 <!-- Default panel contents -->
                 <div class="panel-heading">
-                    MySQL
+                    SQL
                     <p style="color:red"><?php echo $msgMy ?></p>
                 </div>
-
                 <!-- Table -->
                 <table class="table">
-                    <?php 
-                    while ($row = mysql_fetch_array($resultMy, MYSQL_NUM)) 
-                    {
-                    ?> 
-                        <tr>
-                          <td style="width:20%">User01</td>
-                          <td><?php echo $row[0] ?></td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
-                 </table>
-            </div>
-    
-            <div class="btn-group" role="group" aria-label="..." style="margin-bottom: 5%">
-                <button type="submit" name="ButMy" value="Insert" class="btn btn-default">Insert</button>
-                <button type="submit" name="ButMy" value="Update" class="btn btn-default">Update</button>
-                <button type="submit" name="ButMy" value="Delete" class="btn btn-default">Delete</button>
-            </div> 
-
-            <div class="panel panel-default">
-
-                <!-- Default panel contents -->
-                <div class="panel-heading">
-                    PgSql
-                    <p style="color:red"><?php echo $msgPg ?></p>
-                </div>
-        
-                <!-- Table -->
-                <table class="table">
-                    <?php 
-                    while ($line = pg_fetch_array($resultPg, null, PGSQL_NUM)) 
-                    {
-                    ?> 
-                        <tr>
-                          <td style="width:20%">User01</td>
-                          <td><?php echo $line[1] ?></td>
-                        </tr>
-                    <?php
-                    }
-                    ?>
+                %TABLE%
                 </table>
-            </div>
-         
-            <div class="btn-group" role="group" aria-label="..." style="margin-bottom: 5%">
-                <button type="submit" name="ButPg" value="Insert" class="btn btn-default">Insert</button>
-                <button type="submit" name="ButPg" value="Update" class="btn btn-default">Update</button>
-                <button type="submit" name="ButPg" value="Delete" class="btn btn-default">Delete</button>
-            </div> 
-                                                                            
+            </div>                                                    
         </form>
     </body>
 </html>

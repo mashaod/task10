@@ -1,34 +1,22 @@
 <?php
 Class Sql
 {
-	protected $db;
-	protected $sql;
-	protected $selectVal;
-	protected $fromVal;
-	protected $joinVal;
-	protected $whereVal;
-	protected $groupVal;
-	protected $havingVal;
-	protected $orderVal;
-	protected $limitVal;
-	protected $insertVal;
-	protected $valuesVal;
-	protected $deleteVal;
-	protected $updateVal;
-	protected $setVal;
-	
+	protected $data = array();
+
 	public function select($what, $key=false)
 	{
+		$this->data = array();
+
 		if(!empty($what) && $what !== "*")
 		{
 			if($key == 'distinct')
 			{ 
-				$this->selectVal = "Select distinct `$what` ";
+				$this->data['selectVal'] = "Select distinct `$what` ";
 				return $this;
 			}
 			else
 			{
-				$this->selectVal = "Select `$what` ";
+				$this->data['selectVal'] = "Select `$what` ";
 				return $this;
 			}
 		}
@@ -42,7 +30,7 @@ Class Sql
 	{
 		if(!empty($table))
 		{
-			$this->fromVal = "from `$table` ";
+			$this->data['fromVal'] = "from `$table` ";
 			return $this;
 		}
 		else
@@ -55,21 +43,21 @@ Class Sql
 	{
 		if(!empty($table) && !empty($key))
 		{
-			switch $key 
+			switch ($key)
 			{
-				case "join" : $this->joinVal = "INNER JOIN `$table` ON ";
+				case "join" : $this->data['joinVal'] = "INNER JOIN `$table` ";
 				return $this;
 				break;
-				case "leftJoin" : $this->joinVal = "LEFT OUTER JOIN `$table` ";
+				case "leftJoin" : $this->data['joinVal'] = "LEFT OUTER JOIN `$table` ";
 				return $this;
 				break;
-				case "rightJoin" : $this->joinVal = "RIGHT OUTER JOIN `$table` ";
+				case "rightJoin" : $this->data['joinVal'] = "RIGHT OUTER JOIN `$table` ";
 				return $this;
 				break;
-				case "crossJoin" : $this->joinVal = "CROSS JOIN `$table`";
+				case "crossJoin" : $this->data['joinVal'] = "CROSS JOIN `$table`";
 				return $this;
 				break;
-				case "naturalJoin" : $this->joinVal = "NATURAL JOIN `$table`";
+				case "naturalJoin" : $this->data['joinVal'] = "NATURAL JOIN `$table`";
 				return $this;
 				break;
 				default: throw new Exception("Invalid join key");
@@ -85,7 +73,7 @@ Class Sql
 	{
 		if(!empty($param1) && !empty($param2))
 		{
-			switch $math 
+			switch ($math) 
 			{
 				case "<" :  $operator = "<";
 				break;
@@ -94,12 +82,12 @@ Class Sql
 				default: $operator = "=";
 			}
 
-			switch $key 
+			switch ($key) 
 			{
-				case "where" : $this->whereOrOnVal = "where `$param1` $operator '$param2' ";
+				case "where" : $this->data['whereOrOnVal'] = "where `$param1` $operator '$param2' ";
 				return $this;
 				break;
-				case "on" : $this->whereOrOnVal = "ON `$param1` $operator `$param2` ";
+				case "on" : $this->data['whereOrOnVal'] = "ON `$param1` $operator `$param2` ";
 				return $this;
 				break;
 				default: throw new Exception("Invalid where key");
@@ -115,7 +103,7 @@ Class Sql
 	{
 		if(!empty($param))
 		{
-			$this->groupVal = "GROUP BY `$param` ";
+			$this->data['groupVal'] = "GROUP BY `$param` ";
 			return $this;
 		}
 		else
@@ -128,7 +116,7 @@ Class Sql
 	{
 		if(!empty($params))
 		{
-			$this->havingVal = "HAVING $params ";
+			$this->data['havingVal'] = "HAVING $params ";
 			return $this;
 		}
 		else
@@ -139,9 +127,9 @@ Class Sql
 
 	public function order($param, $key)
 	{
-		if(!empty($param) && !empty($key) && ($key="DESC" || $key="ASC"))
+		if(!empty($param) && !empty($key) && ($key == "asc" or $key == "desc"))
 		{
-			$this->orderVal = "ORDER BY `$param` $key ";
+			$this->data['orderVal'] = "ORDER BY `$param` $key ";
 			return $this;
 		}
 		else
@@ -154,7 +142,7 @@ Class Sql
 	{
 		if(!empty($param) && is_int($param))
 		{
-			$this->limitVal = "LIMIT $param ";
+			$this->data['limitVal'] = "LIMIT $param ";
 			return $this;
 		}
 		else
@@ -165,10 +153,11 @@ Class Sql
 	
 	public function insert($table, $col1, $col2)
 	{
-		
+		$this->data = array();
+
 		if(!empty($table) && !empty($col1) && !empty($col2))
 		{
-			$this->insertVal = "INSERT INTO $table (`$col1`, `$col2`) ";
+			$this->data['insertVal'] = "INSERT INTO $table (`$col1`, `$col2`) ";
 			return $this;
 		}
 		else
@@ -182,7 +171,7 @@ Class Sql
 		
 		if(!empty($val1) && !empty($val2))
 		{
-			$this->valuesVal = "VALUES ('$val1', '$val2')";
+			$this->data['valuesVal'] = "VALUES ('$val1', '$val2')";
 			return $this;
 		}
 		else
@@ -193,10 +182,11 @@ Class Sql
 
 	public function delete($table)
 	{
-		
+		$this->data = array();
+
 		if(!empty($table))
 		{
-			$this->deleteVal = "DELETE FROM $table ";
+			$this->data['deleteVal'] = "DELETE FROM $table ";
 			return $this;
 		}
 		else
@@ -207,10 +197,11 @@ Class Sql
 	
 	public function update($table)
 	{
-		
+		$this->data = array();
+
 		if(!empty($table))
 		{
-			$this->updateVal = "UPDATE $table ";
+			$this->data['updateVal'] = "UPDATE $table ";
 			return $this;
 		}
 		else
@@ -220,11 +211,10 @@ Class Sql
 	}
 
 	public function set($col, $val)
-	{
-		
+	{		
 		if(!empty($col) && !empty($val))
 		{
-			$this->setVal = "SET `$col`='$val' ";
+			$this->data['setVal'] = "SET `$col` = '$val' ";
 			return $this;
 		}
 		else
@@ -235,24 +225,13 @@ Class Sql
 	
 	public function exec()
 	{		
-		switch(TRUE)
+		foreach($this->data as $kay => $val)
 		{
-			case(!empty($this->selectVal) && !empty($this->whereVal)): $this->sql = $this->selectVal . $this->fromVal . $this->whereVal; break;
-			case(!empty($this->selectVal)): $this->sql = $this->selectVal . $this->fromVal . $this->whereVal; break;
-			case(!empty($this->insertVal)): $this->sql = $this->insertVal . $this->valuesVal; break;
-			case(!empty($this->deleteVal)): $this->sql = $this->deleteVal . $this->whereVal; break;
-			case(!empty($this->updateVal)): $this->sql = $this->updateVal . $this->setVal . $this->whereVal; break;
-			default: throw new Exception("Wrong exec values");
+			$kay?$str .= $val:false;
 		}
-	}
-	
-	public function restartVal()
-	{
-		$this->selectVal = FALSE;
-		$this->insertVal = FALSE;
-		$this->updateVal = FALSE;
-		$this->deleteVal = FALSE;
-		$this->whereVal = FALSE;
+
+		$this->data['sql'] = $str;
+		return $this->data['sql'];
 	}
 }
 ?>

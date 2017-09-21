@@ -1,65 +1,30 @@
 <?php
 include('config.php');
 include('libs/Sql.php');
-include('libs/MySql.php');
-include('libs/PgSql.php');
+include('libs/View.php');
 
-$mySql = new MySql;
-$pgSql = new PgSql;
+$Sql = new Sql;
+$view = new View(TEMPLATE);
+$sqlArray = array();
 
-// My action
 try
 {
-    if (isset($_POST['ButMy']))   
-    {
-        if($_POST['ButMy'] == 'Insert')
-        {
-	    $sqlInsert = $mySql->insert('MY_TEST','key','data')->values('User01', 'someText')->exec();
-	    $mySql->restartVal();
-        }
-        elseif($_POST['ButMy'] == 'Update')
-        {
-            $sqlUpdate = $mySql->update('MY_TEST')->set('data', 'newText')->where('key', 'User01')->exec();
-	    $mySql->restartVal();
-        }
-        elseif($_POST['ButMy'] == 'Delete')
-        {
-            $sqlDelete = $mySql->delete('MY_TEST')->where('key', 'User01')->exec();
-	    $mySql->restartVal();
-        }	
-    }
-    //Select
-    $resultMy = $mySql->select('data')->from('MY_TEST')->where('key', 'User01')->exec();
+    $sqlArray['Select'] = $Sql->select('data')->from('MY_TEST')->whereOrOn('key', 'User01')->exec();
+    $sqlArray['Select Distinct'] = $Sql->select('data', 'distinct')->from('MY_TEST')->whereOrOn('key', 'User01')->exec();
+    $sqlArray['Select Join'] = $Sql->select('data')->from('TableA')->join('TableB')->whereOrOn('key', 'User01', 'on')->exec();
+    $sqlArray['Select Left Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'leftJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
+    $sqlArray['Select Right Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'rightJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
+    $sqlArray['Select Cross Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'crossJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
+    $sqlArray['Select Natural Join'] = $Sql->select('data')->from('TableA')->join('TableB', 'naturalJoin')->whereOrOn('TableA.name', 'TableB.name', 'on')->exec();
+    $sqlArray['Select Group Having Order Limit'] = $Sql->select('data')->from('MY_TEST')->whereOrOn('key', 'User01')->group('key')->having('id=1 or id=2')->
+    order('name','desc')->limit(10)->exec();
+    $sqlArray['Insert'] = $Sql->insert('MY_TEST','key','data')->values('User01', 'someText')->exec();
+    $sqlArray['Update'] = $Sql->update('MY_TEST')->set('data', 'newText')->whereOrOn('key', 'User01')->exec();
+    $sqlArray['Delete'] = $Sql->delete('MY_TEST')->whereOrOn('key', 'User01')->exec();
+
+    $view->createTemplate($sqlArray);
 }
 catch(Exception $error)
 {
     $msgMy = $error->getMessage();
 }
-
-// PG action
-try
-{
-    if (isset($_POST['ButPg']))   
-    {
-        if($_POST['ButPg'] == 'Insert')
-        {
-		$sqlInsert = $pgSql->insert('PG_TEST','key','data')->values('User01', 'someText')->exec();
-        }
-        elseif($_POST['ButPg'] == 'Update')
-        {
-		$sqlUpdate = $pgSql->update('PG_TEST')->set('data', 'newText')->where('key', 'User01')->exec();
-        }
-        elseif($_POST['ButPg'] == 'Delete')
-        {
-		$sqlDelete = $pgSql->delete('PG_TEST')->where('key', 'User01')->exec();
-        }
-    }
-	//Select
-	$resultPg = $pgSql->select('key, data')->from('PG_TEST')->where('key', 'User01')->exec();
-}
-catch(Exception $error)
-{
-    $msgPg = $error->getMessage();	
-}
-
-include('templates/index.php');
